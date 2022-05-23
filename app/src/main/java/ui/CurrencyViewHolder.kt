@@ -12,7 +12,7 @@ import com.example.homework_recyclerview.R
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-class CurrencyViewHolder(inflater: LayoutInflater, parent: ViewGroup, private var function:(Int)-> Unit)
+class CurrencyViewHolder(inflater: LayoutInflater, parent: ViewGroup, private var function:(Currency, Int)-> Unit)
     :RecyclerView.ViewHolder(inflater.inflate(R.layout.item, parent, false))
 {
     private val currencyContainerTextView = itemView.findViewById<TextInputLayout>(R.id.textField)
@@ -29,7 +29,7 @@ class CurrencyViewHolder(inflater: LayoutInflater, parent: ViewGroup, private va
         currencyTypeTextView.text = item.type
         currencyFlagView.setBackgroundResource(item.flag)
         currencyFlagView.setOnLongClickListener {
-            function(position)
+            function(item, position)
             true
         }
     }

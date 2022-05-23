@@ -24,7 +24,8 @@ import kotlin.random.Random
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
-    private var position: Int = 3
+
+    private var deletedCurrency: Currency? = null
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private var chosenIndex = -1
     private var adapter: Adapter? = null
@@ -68,15 +69,15 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 scrollBottom(adapter?.itemCount ?: 0)
             }
 
-        val myLambda2: (Int) -> Unit = {
-            position = it
+        val myLambda2: (Currency, Int) -> Unit = {item, position ->
+            deletedCurrency = item
 
-            toolbar.setTitle("Item Selected")
+            toolbar.setTitle("$position Item Selected")
             toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.toolbarColor))
             toolbar.menu.findItem(R.id.menu_del).isVisible = true
             toolbar.menu.findItem(R.id.sorting_by).isVisible = false
             toolbar.menu.findItem(R.id.drop_sorting).isVisible = false
-            Log.i("MainActivity", "${position}")
+            Log.i("MainActivity", "${deletedCurrency}")
 
         }
 
@@ -153,7 +154,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
 
     private fun deleteItems(){
-        dialog = DeleteDialogFragment(adapter!!, position)
+        dialog = DeleteDialogFragment(adapter!!, deletedCurrency)
         dialog.show(supportFragmentManager, null)
         toolbar.setTitle("Converter")
         toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.white))

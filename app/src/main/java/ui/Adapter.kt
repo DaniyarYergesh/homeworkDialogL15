@@ -8,7 +8,7 @@ import com.example.homework_recyclerview.Currency
 import model.Parent
 import java.util.*
 
-class Adapter(private val clickListener: () -> Unit, private val function: (Int) -> Unit) :
+class Adapter(private val clickListener: () -> Unit, private val function: (Currency, Int) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val data = mutableListOf<Parent>()
@@ -57,6 +57,11 @@ class Adapter(private val clickListener: () -> Unit, private val function: (Int)
     {
         data.removeAt(position)
         notifyItemRemoved(position)
+        notifyDataSetChanged()
+    }
+
+    fun deleteCurrency(currency: Currency){
+        data.remove(currency)
         notifyDataSetChanged()
     }
 
