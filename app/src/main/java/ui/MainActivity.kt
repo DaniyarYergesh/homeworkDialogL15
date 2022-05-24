@@ -1,15 +1,11 @@
 package ui
 
-import android.app.AlertDialog
+
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
@@ -17,15 +13,16 @@ import androidx.recyclerview.widget.*
 import com.example.homework_recyclerview.Add1
 import com.example.homework_recyclerview.Currency
 import com.example.homework_recyclerview.R
+import com.google.android.material.snackbar.Snackbar
 import model.Parent
-import kotlin.concurrent.fixedRateTimer
 import kotlin.random.Random
 
 
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
+class MainActivity : AppCompatActivity(R.layout.activity_main), DeleteDialogCallback{
 
 
     private var deletedCurrency: Currency? = null
+    private var positionOfDeletedItem: Int? = null
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private var chosenIndex = -1
     private var adapter: Adapter? = null
@@ -71,6 +68,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         val myLambda2: (Currency, Int) -> Unit = {item, position ->
             deletedCurrency = item
+            positionOfDeletedItem = position
 
             toolbar.setTitle("$position Item Selected")
             toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.toolbarColor))
@@ -96,6 +94,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         val itemTouchHelper1 = ItemTouchHelper(DragDropMove(adapter!!))
         itemTouchHelper1.attachToRecyclerView(myRecyclerView)
+
 
     }
 
@@ -154,13 +153,23 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
 
     private fun deleteItems(){
-        dialog = DeleteDialogFragment(adapter!!, deletedCurrency)
+        dialog = DeleteDialogFragment()
         dialog.show(supportFragmentManager, null)
         toolbar.setTitle("Converter")
         toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
         toolbar.menu.findItem(R.id.menu_del).isVisible = false
         toolbar.menu.findItem(R.id.sorting_by).isVisible = true
         toolbar.menu.findItem(R.id.drop_sorting).isVisible = true
+    }
+
+    override fun onDeleteButton() {
+        adapter?.deleteCurrency(deletedCurrency!!, positionOfDeletedItem!!)
+
+        Snackbar.make(findViewById(R.id.recyclerView), "Item Deleted", Snackbar.LENGTH_SHORT)
+            .setAction("Undo" ){
+                adapter?.addNewItem(deletedCurrency!!, positionOfDeletedItem!!)
+            }
+            .show()
     }
 
 

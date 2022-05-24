@@ -1,18 +1,24 @@
 package ui
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homework_recyclerview.*
 import com.example.homework_recyclerview.Currency
+import com.google.android.material.snackbar.Snackbar
+
 import model.Parent
+import java.nio.file.Files.find
 import java.util.*
 
-class Adapter(private val clickListener: () -> Unit, private val function: (Currency, Int) -> Unit) :
+class Adapter(
+    private val clickListener: () -> Unit,
+    private val function: (Currency, Int) -> Unit
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val data = mutableListOf<Parent>()
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
@@ -53,14 +59,13 @@ class Adapter(private val clickListener: () -> Unit, private val function: (Curr
         notifyDataSetChanged()
     }
 
-    fun deleteItem(position: Int)
-    {
+    fun deleteItem(position: Int) {
         data.removeAt(position)
         notifyItemRemoved(position)
         notifyDataSetChanged()
     }
 
-    fun deleteCurrency(currency: Currency){
+    fun deleteCurrency(currency: Currency, position: Int) {
         data.remove(currency)
         notifyDataSetChanged()
     }
@@ -77,7 +82,7 @@ class Adapter(private val clickListener: () -> Unit, private val function: (Curr
     }
 
 
-    fun sortByName(){
+    fun sortByName() {
         val data1 = data.dropLast(1) as MutableList<Currency>
         data1.sortBy { it.type }
         val button: Parent = data.last()
@@ -87,7 +92,7 @@ class Adapter(private val clickListener: () -> Unit, private val function: (Curr
         setItems(items)
     }
 
-    fun sortByPrice(){
+    fun sortByPrice() {
         val data1 = data.dropLast(1) as MutableList<Currency>
         data1.sortBy { it.text }
         val button: Parent = data.last()
